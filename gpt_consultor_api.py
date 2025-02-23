@@ -23,17 +23,26 @@ class GPTCedec:
         self.kit_consultor_recs = []
         self.informes = {}
     
-    def preparar_intervencion(self, empresa, tipo_intervencion, analista_info):
+    def iniciar_proyecto(self):
+        return {"message": "Por favor, aporte el 'Informe GO' de la empresa a intervenir para iniciar el análisis inicial."}
+    
+    def preparar_intervencion(self, empresa, tipo_intervencion, analista_info, informe_go):
         self.empresa = empresa
         self.tipo_intervencion = tipo_intervencion
         self.analista_info = analista_info
-        return {"message": f"Preparación de la intervención iniciada para {self.empresa}. Objetivos identificados y estrategia inicial definida."}
+        proyectos_responsable = self.extraer_proyectos_responsable(informe_go)
+        return {"message": f"Preparación de la intervención iniciada para {self.empresa}. Proyectos a realizar: {proyectos_responsable}. Objetivos identificados y estrategia inicial definida. Ahora, por favor, proporcione los archivos adicionales del analista, incluyendo informes financieros y económicos."}
     
-    def conferencia_apertura(self):
-        return {"message": "Conferencia de Apertura realizada. Se han establecido expectativas, objetivos y plan de trabajo inicial."}
+    def extraer_proyectos_responsable(self, informe_go):
+        # Simulación de extracción de proyectos del informe GO
+        return "Proyectos extraídos del informe GO"
     
-    def desarrollo_intervencion(self):
-        return {"message": "Desarrollo de la intervención en curso. Metodologías aplicadas, herramientas implementadas y seguimiento en proceso."}
+    def analizar_documentacion_adicional(self, financial_data):
+        self.financial_data = financial_data
+        return {"message": "Análisis de documentación completado. Se han identificado riesgos financieros, económicos y estratégicos. Se recomienda proceder con la metodología del consultor."}
+    
+    def metodologia_consultor(self):
+        return {"message": "Iniciando intervención según metodología CEDEC: Conferencia de apertura, desarrollo de intervención, seguimiento con informes, y transferencia de soporte post-intervención."}
     
     def interpretar_finanzas(self, financial_data):
         self.financial_data = financial_data
@@ -61,17 +70,21 @@ class GPTCedec:
 
 cedec_gpt = GPTCedec()
 
+@app.get("/iniciar_proyecto")
+def iniciar_proyecto():
+    return cedec_gpt.iniciar_proyecto()
+
 @app.post("/preparar_intervencion")
-def preparar_intervencion(data: ProyectoInput):
-    return cedec_gpt.preparar_intervencion(data.empresa, data.tipo_intervencion, data.analista_info)
+def preparar_intervencion(data: ProyectoInput, informe_go: str):
+    return cedec_gpt.preparar_intervencion(data.empresa, data.tipo_intervencion, data.analista_info, informe_go)
 
-@app.post("/conferencia_apertura")
-def conferencia_apertura():
-    return cedec_gpt.conferencia_apertura()
+@app.post("/analizar_documentacion_adicional")
+def analizar_documentacion_adicional(data: FinanzasInput):
+    return cedec_gpt.analizar_documentacion_adicional(data.financial_data)
 
-@app.post("/desarrollo_intervencion")
-def desarrollo_intervencion():
-    return cedec_gpt.desarrollo_intervencion()
+@app.get("/metodologia_consultor")
+def metodologia_consultor():
+    return cedec_gpt.metodologia_consultor()
 
 @app.post("/interpretar_finanzas")
 def interpretar_finanzas(data: FinanzasInput):
